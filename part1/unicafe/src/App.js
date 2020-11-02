@@ -3,7 +3,7 @@ const Stats = (props) => {
 
       return (
         <div>
-        {props.text} {props.value}
+         {props.value}
         </div>
     );
     
@@ -11,13 +11,15 @@ const Stats = (props) => {
 const Statistics = (props) => {
   if(props.all>0)
   return (
-    <div>
-      <Stats value={props.good} total={props.all} text="good"/>
-     <Stats value={props.neutral} total={props.all} text="neutral" />
-    <Stats value={props.bad} total={props.all} text="bad" /> <Stats value={props.all} text="All" />
-    <Stats value={props.avg} total={props.all} text="Average" />
-    <Stats value={props.positive} total={props.all} text="Positive" />
-    </div>
+    <table>
+     <tr><td>good</td> <td><Stats value={props.good} total={props.all} text="good"/></td></tr>
+     <tr><td>neutral</td><td><Stats value={props.neutral} total={props.all} text="neutral" /></td></tr>
+   <tr><td>bad</td><td> <Stats value={props.bad} total={props.all} text="bad" /></td></tr> 
+   <tr><td>all</td><td><Stats value={props.all} text="All" /></td></tr>
+    <tr><td>Average</td><td><Stats value={props.avg} total={props.all} text="Average" /></td></tr>
+    <tr><td>positive</td><td> <Stats value={props.positive} total={props.all} text="Positive" /></td></tr>
+   
+    </table>
   );
   else
   return (
