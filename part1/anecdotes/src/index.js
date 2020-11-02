@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [points,setPoints]=useState([0,0,0,0,0,0])
   const displayAnecdote = () =>{
     
     let x=Math.random();
@@ -11,10 +12,17 @@ const App = (props) => {
     x=Math.floor(x*( l-1));
     setSelected(x);
   }
+  const vote = () => {
+    const copy=[...points]
+    copy[selected]+=1;
+    setPoints(copy);
+  }
   return (
     <div>
-      {props.anecdotes[selected]}
+    <p>{props.anecdotes[selected]} <br />has  {points[selected]} votes</p> 
+      <button type="button" onClick={vote}>Vote</button>
       <button type="button" onClick={displayAnecdote}>Next Anecdote</button>
+      
     </div>
   )
 }
@@ -27,6 +35,7 @@ const anecdotes = [
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
+
 
 ReactDOM.render(
   <App anecdotes={anecdotes} />,
