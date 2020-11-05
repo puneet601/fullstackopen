@@ -7,7 +7,7 @@ return (
 }
 const Content = ({course}) => {
     return(
-course.parts.map(p => <Part part={p} />)
+course.parts.map(p => <Part id={p.id} part={p} />)
     );
 }
 const Header = () => {
@@ -15,10 +15,21 @@ const Header = () => {
         <h1>Half Stack application development</h1>
     )
 }
+var c=0;
+
+const Total = ({parts}) => {
+    var result = parts.reduce(function(tot, arr) { 
+       
+        return tot + arr.exercises;
+      
+      },0);
+    return (<p>total of {result} exercises</p>);
+}
 const Course = ({course}) => {
 return (<div>
     <Header />
 <Content course={course} />
+<Total parts={course.parts} />
 </div>);
 }
   const App = () => {
@@ -40,7 +51,12 @@ return (<div>
           name: 'State of a component',
           exercises: 14,
           id: 3
-        }
+        },
+        {
+            name: 'Redux',
+            exercises: 11,
+            id: 4
+          }
       ]
     }
   
