@@ -5,15 +5,28 @@ const App = () => {
     { name: 'Arto Hellas',id:1}
   ])
   const [ newName, setNewName ] = useState('')
-  const setName = (event) => {setNewName(event.target.value)}
+  const setName = (event) => {
+    
+    setNewName(event.target.value)
+    
+  }
+  const checkduplicates = (person) => person.name === newName;
   const addName = (event) => {
     event.preventDefault();
-    const personObject ={
-      name:newName,
-    id: Math.floor(Math.random() * 101)
+    if(persons.findIndex(checkduplicates)!==-1)
+    { console.log("no");
+      window.alert(`${newName}  is already added to phonebook`);
     }
-    setPersons([...persons, personObject])
-    console.log(persons);
+    else{
+      const personObject ={
+        name:newName,
+      id: Math.floor(Math.random() * 101)
+      }
+      setPersons([...persons, personObject])
+      console.log(persons);
+      
+    }
+    
   }
   const Persons = () => {
     return(
