@@ -1,17 +1,8 @@
-import React, { useState } from 'react'
-const Persons = (props) => {
-  return (
-      <ul>
-          {props.persons.filter(person => person.name.toUpperCase().includes(props.newSearch.toUpperCase())).map(person => (
-          <Person key={person.id} name={person.name} number={person.number}  /> ))}
-      </ul> 
-  ) 
-}
-const Person = (props) => {
-  return (
-    <li>{props.name}  {props.number} </li>
-  )
-}
+import React, { useState } from "react";
+import NewPerson from "./components/AddPerson";
+import FilterPerson from "./components/FilterPerson";
+import Persons from "./components/Persons";
+
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas', number: '040-123456',id:1 },
@@ -20,7 +11,7 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122',id:4 }
   ])
   const [newSearch , setnewSearch]=useState('')
-  const [personsToShow,setpersonsToShow] = useState([])
+  // const [personsToShow,setpersonsToShow] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ number, setNumber ] = useState('')
  
@@ -53,20 +44,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form><div>
-        fliter shown with  <input
-            value={newSearch}
-            onChange={handleSearchChange} />
-            <br />   </div>
-        <div>
-          name: <input value={newName} onChange={setName} />
-        </div>
-        <div>number: <input value={number} type="number"  onChange={setnewNumber} /></div>
-        <div>
-          <button type="submit" onClick={addName}>add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      
+     
+        <FilterPerson newSearch={newSearch} handleSearchChange={handleSearchChange} />
+        <NewPerson newName={newName} setName={setName} number={number} setnewNumber={setnewNumber} addName={addName} />
+        <h2>Numbers</h2>
       <Persons persons={persons}
         newSearch={newSearch} />
     </div>
