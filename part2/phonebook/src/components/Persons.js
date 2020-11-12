@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Person from './Person'
 const Persons = (props) => {
   return (
       <ul>
           {props.persons.filter(person => person.name.toUpperCase().includes(props.newSearch.toUpperCase())).map(person => (
-          <Person key={person.id} name={person.name} number={person.number}  /> ))}
+          <Person key={person.id} name={person.name} deletePerson={props.handleDeletePerson(person.name, person.id)} /> ))}
       </ul> 
   ) 
 }

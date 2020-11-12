@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
+import axios from 'axios';
 import NewPerson from "./components/AddPerson";
 import FilterPerson from "./components/FilterPerson";
+import Person from "./components/Person"
 import Persons from "./components/Persons";
+import personDB from "./services/personDB";
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -10,14 +13,41 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345',id:3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122',id:4 }
   ])
-  const [newSearch , setnewSearch]=useState('')
-  // const [personsToShow,setpersonsToShow] = useState([])
-  const [ newName, setNewName ] = useState('')
-  const [ number, setNumber ] = useState('')
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [newSearch, setNewSearch] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+
  
   const setName = (event) =>setNewName(event.target.value);
-  const setnewNumber = (event) => setNumber(event.target.value);
+  const setNumber = (event) => setNewNumber(event.target.value);
   const checkduplicates = (person) => person.name === newName;
+  
+
+  const handleDeletePerson = (name, id) => {
+    return () => {
+      if (window.confirm(`Do you wante to Delete ${name} ?`)) {
+        personDB
+          .deletePerson(id)
+          .then(() => {
+            setPersons(persons.filter(n => n.id !== id));
+            setErrorMessage(`Cannot Delete ${name}`);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(error => {
+            setPersons(persons.filter(n => n.name !== name));
+            setErrorMessage(`The user ${name} has already been removed from the server.`);
+          });
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      }
+    };
+  };
+
+  
+ 
   const addName = (event) => {
     event.preventDefault();
     if(persons.findIndex(checkduplicates)!==-1)
@@ -27,30 +57,38 @@ const App = () => {
     else{
       const personObject ={
         name:newName,
-        number:number,
+        number:newNumber,
       id: Math.floor(Math.random() * 101)
       }
-      setPersons([...persons, personObject])
-      setNewName('');
+      
+      personDB
+      .create(personObject)
+      .then(response => {
+        setPersons([...persons, personObject])
+      setNewName('')
+      setNewName('')
+      })
         }
-    
+  
   }
-  const handleSearchChange = (event)  =>{
-    setnewSearch(event.target.value);
+ const handleSearchChange = (event)  =>{
+    setNewSearch(event.target.value);
   }
   
  
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      
-     
-        <FilterPerson newSearch={newSearch} handleSearchChange={handleSearchChange} />
-        <NewPerson newName={newName} setName={setName} number={number} setnewNumber={setnewNumber} addName={addName} />
+      <h2>Phonebook</h2>   
+     <FilterPerson newSearch={newSearch} handleSearchChange={handleSearchChange} />
+        <NewPerson newName={newName} setName={setName} number={newNumber} setNumber={setNumber} addName={addName}  handleDeletePerson={handleDeletePerson} />
         <h2>Numbers</h2>
-      <Persons persons={persons}
-        newSearch={newSearch} />
+
+              <Persons
+        persons={persons}
+        newSearch={newSearch}
+        handleDeletePerson={handleDeletePerson}
+      />
     </div>
   )
 }
