@@ -1,80 +1,14 @@
 {
   "persons": [
     {
-      "0": {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-      },
-      "1": {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-      },
-      "2": {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-      },
-      "3": {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-      },
-      "id": 2
-    },
-    {
-      "0": {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-      },
-      "1": {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-      },
-      "2": {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-      },
-      "3": {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-      },
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
       "id": 3
     },
     {
-      "name": "gdjqy",
-      "number": "8449876498",
-      "id": 60
-    },
-    {
-      "name": "hiu",
-      "number": "76579",
-      "id": 30
-    },
-    {
-      "name": "",
-      "number": "76579",
-      "id": 34
-    },
-    {
-      "name": "ioijoijoi",
-      "number": "76579768767",
-      "id": 26
-    },
-    {
-      "name": "jbjki",
-      "number": "79798798798798",
-      "id": 8
-    },
-    {
-      "name": "sfef",
-      "number": "33233232",
-      "id": 29
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
     }
   ]
 }

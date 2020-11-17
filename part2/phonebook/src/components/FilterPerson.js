@@ -1,6 +1,6 @@
 import React from 'react'
-
 const FilterPerson = (props) => {
+    
     return (
         <form>
        show with

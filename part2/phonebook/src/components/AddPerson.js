@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 const AddPerson = (props) => {
 return(<form onSubmit={props.addPerson}>
 <div>
-          name: <input value={props.newName} onChange={props.setName} />
+          Name: <input value={props.newName} onChange={props.setName} required />
         </div>
-        <div>number: <input value={props.number} type="number"  onChange={props.setNumber} /></div>
+        <div>Number: <input value={props.newNumber} type="number"  onChange={props.setNumber} required /></div>
        
-        <button type="submit" onClick={props.addName}>add</button>
+        <button type="submit" onClick={props.addName}>Add</button>
        
       </form>);
       }
