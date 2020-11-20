@@ -44,9 +44,9 @@ let persons=[
      const person= persons.find(person => person.id === uid)
      res.json(person)
   })
-  app.delete('api/persons/:id',(req,res) => {
-    uid=Number(req.params.id);
-   const person= persons.filter(person => person.id === uid)
+  app.delete('/api/persons/:id',(req,res) => {
+   const uid=Number(req.params.id)
+  persons= persons.filter(person => person.id !== uid)
    res.status(204).end()
 })
 app.post('/api/persons', (request, response) => {
