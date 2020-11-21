@@ -1,7 +1,14 @@
-const { response } = require('express')
+const { json } = require('express')
 const express=require('express')
+const { token } = require('morgan')
 const app = express()
+var morgan=require('morgan')
 app.use(express.json())
+app.use(morgan(':method :url :status :res[header] - :response-time ms :data'))
+morgan.token('data', function getId (req) {
+  return JSON.stringify({"name": req.body.name || '-',"number":req.body.number || '-'})
+})  
+  
 let persons=[
     { 
       "name": "Arto Hellas", 
@@ -52,12 +59,14 @@ let persons=[
 app.post('/api/persons', (request, response) => {
   const body=request.body
   const name=body.name
+  
   if(!body.name){
     return response.status(404).json({
       error:'Please fill name'
     })
   }
-  if(persons.filter(person => person.name === name))
+  let isUnique = persons.findIndex(person => person.name === name)
+  if(isUnique !== -1)
   { 
     return response.status(400).json({ 
       error: 'name must be unique' 
