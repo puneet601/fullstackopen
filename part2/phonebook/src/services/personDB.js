@@ -20,8 +20,5 @@ const deletePerson = id => {
   };
   
 export default {
-    getAll:getAll,
-    create:create,
-    deletePerson:deletePerson,
-    update:update
-};
+    getAll,create,deletePerson,update
+}
