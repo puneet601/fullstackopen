@@ -1,8 +1,9 @@
-const { json } = require('express')
 const express=require('express')
-const { token } = require('morgan')
+const morgan = require('morgan')
 const app = express()
-var morgan=require('morgan')
+const cors=require('cors')
+
+app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[header] - :response-time ms :data'))
 morgan.token('data', function getId (req) {
@@ -85,6 +86,6 @@ app.post('/api/persons', (request, response) => {
     persons=persons.concat(perObject)
    response.json(persons)
   })
-const PORT = 3001
+const PORT = process.env.PORT ||  3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
