@@ -1,16 +1,20 @@
+// require('dotenv').config();
 const express=require('express')
 const morgan = require('morgan')
 const app = express()
 const cors=require('cors')
 
+
+
 app.use(cors())
-app.use(express.json())
 app.use(express.static('build'))
+app.use(express.json())
+
 app.use(morgan(':method :url :status :res[header] - :response-time ms :data'))
 morgan.token('data', function getId (req) {
   return JSON.stringify({"name": req.body.name || '-',"number":req.body.number || '-'})
 })  
-  
+
 let persons=[
     { 
       "name": "Arto Hellas", 
