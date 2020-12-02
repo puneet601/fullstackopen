@@ -1,7 +1,13 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
+const Person = require('./models/person')
 const express=require('express')
 const morgan = require('morgan')
 const app = express()
-const cors=require('cors')
+const cors=require('cors');
+const person = require('./models/person');
+
+
 
 app.use(cors())
 app.use(express.static('build'))
@@ -11,82 +17,74 @@ app.use(morgan(':method :url :status :res[header] - :response-time ms :data'))
 morgan.token('data', function getId (req) {
   return JSON.stringify({"name": req.body.name || '-',"number":req.body.number || '-'})
 })  
-  
-let persons=[
-    { 
-      "name": "Arto Hellas", 
-      "number": "040-123456",
-      "id": 1
-    },
-    { 
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    { 
-      "name": "Dan Abramov", 
-      "number": "12-43-234345",
-      "id": 3
-    },
-    { 
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122",
-      "id": 4
-    }
-  ]
- 
 
-  
+// const password = process.argv[2]
+
+
   app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
-  
   app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+      response.json(persons)
+    })
   })
   app.get('/api/info',(request,response) => {
-    const dateObject=new Date()
-      const info="Phonebook has 4 people\\n" + dateObject
+    var dateObject=new Date()
+    Person.count({}, function(err, count){
+      var info="Phonebook has " + count +" people" + dateObject;
       response.json(info)
+      })  
+        
   })
   app.get('/api/persons/:id',(req,res) => {
-      uid=Number(req.params.id);
-     const person= persons.find(person => person.id === uid)
-     res.json(person)
+    
+     Person.findById( req.params.id).then(person => {res.json(person)})
+     
   })
   app.delete('/api/persons/:id',(req,res) => {
-   const uid=Number(req.params.id)
-  persons= persons.filter(person => person.id !== uid)
+   
+  Person.findByIdAndRemove(req.params.id)
    res.status(204).end()
 })
 app.post('/api/persons', (request, response) => {
   const body=request.body
   const name=body.name
-  
-  if(!body.name){
+  const number=body.number
+    if(!body.name){   console.log("Please fill name")
     return response.status(404).json({
-      error:'Please fill name'
+    error:'Please fill name'
     })
   }
-  let isUnique = persons.findIndex(person => person.name === name)
-  if(isUnique !== -1)
-  { 
+  let isUnique;
+   Person.find({"name":name,"number":number},function (err, person) {
+    if(person)
+    isUnique=0;
+    else
+    isUnique=1;
+  })
+  if(isUnique ==0)
+  {   console.log("name must be unique");
     return response.status(400).json({ 
+     
       error: 'name must be unique' 
     })
 
   }
-   const id = persons.length > 0
-    ? Math.max(...persons.map(n => n.id)) 
-    : 0
-    const perObject={
-      name:body.name,
-      number:body.number,
-      id:id+1
-    }
-    console.log(perObject)
-    persons=persons.concat(perObject)
-   response.json(persons)
+   
+    const person=new Person({
+      name: name, 
+      number: number,
+      id: Math.floor(Math.random() * 101)
+      
+  })
+    // console.log(perObject)
+    // persons=persons.concat(perObject)
+    person.save().then(result => {
+      response.json(result);
+      // mongoose.connection.close()
+    })
+  //  response.json(persons)
   })
 const PORT = process.env.PORT ||  3001
 app.listen(PORT)
