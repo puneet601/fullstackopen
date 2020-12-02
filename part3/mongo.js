@@ -8,21 +8,21 @@ const password = process.argv[2]
 const url =
 `mongodb+srv://admin-Puneet:${password}@cluster0.jtfpp.mongodb.net/phonebook?retryWrites=true`
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-const PhonebookSchema=new mongoose.Schema({
+const personSchema=new mongoose.Schema({
     name:String,
     number:String,
     id:Number
 })
-const Phonebook=mongoose.model('Phonebook',PhonebookSchema);
+const Person=mongoose.model('Person',personSchema);
 if (process.argv.length > 3) {
     const newName=process.argv[3]
     const newNumber=process.argv[4]
-    const phonebook=new Phonebook({
+    const person=new person({
         name: newName, 
         number: newNumber,
         id: Math.floor(Math.random() * 101)
     })
-    phonebook.save().then(result => {
+    person.save().then(result => {
         console.log(`Added ${newName} number ${newNumber} to phonebook.`)
         mongoose.connection.close()
       })
@@ -31,7 +31,7 @@ if (process.argv.length > 3) {
 
 else if(process.argv.length === 3){
     
-    Phonebook.find({}).then(result => {
+    Person.find({}).then(result => {
         console.log("phonebook:");
       result.forEach(record => {
           console.log(record.name +" " + record.number);

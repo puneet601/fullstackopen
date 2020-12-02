@@ -1,8 +1,10 @@
 import axios from "axios";
-const baseURL = '/api/persons'
+const baseURL = '/api/persons';
 
 const getAll = () => {
-  const request = axios.get(baseURL);
+  const request = Person.find({}).then(person => {
+    response.json(person);
+  })
   return request.then(response => response.data);
 };
 const create = newObject =>{
