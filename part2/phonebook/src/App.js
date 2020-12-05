@@ -25,12 +25,13 @@ const App = () => {
     })
 }, [])
  const handleDeletePerson = (name, id) => {
+  
     return () => {
       if (window.confirm(`Do you wante to Delete ${name} ?`)) {
         personDB
           .deletePerson(id)
           .then(() => {
-            setPersons(persons.filter(n => n.id !== id));
+            setPersons(persons.filter(n => n.id !== id))
             setStatus(true)
             setErrorMessage(`Deleted ${name}`)             
             setTimeout(() => {
@@ -70,7 +71,7 @@ const App = () => {
         }).catch(error => {
           setStatus(false)
           setErrorMessage(         
-            `${x.name}  is already deleted from phonebook`
+            `${x.name}  is already added to phonebook`
           )
           setTimeout(() => {
             setErrorMessage(null)

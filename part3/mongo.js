@@ -11,7 +11,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 const personSchema=new mongoose.Schema({
     name:String,
     number:String,
-    id:Number
+    
 })
 const Person=mongoose.model('Person',personSchema);
 if (process.argv.length > 3) {
@@ -20,7 +20,7 @@ if (process.argv.length > 3) {
     const person=new person({
         name: newName, 
         number: newNumber,
-        id: Math.floor(Math.random() * 101)
+        // id: Math.floor(Math.random() * 101)
     })
     person.save().then(result => {
         console.log(`Added ${newName} number ${newNumber} to phonebook.`)
