@@ -89,12 +89,13 @@ const App = () => {
           .create(personObject)
           .then(newPerson => {
             setPersons(persons.concat(newPerson));
+            setStatus(true);
             setErrorMessage(`Added ${personObject.name}`);
             setNewName("");
             setNewNumber("");
           })
           .catch(error => {
-            setStatus("true");
+            setStatus(false);
             setErrorMessage(`${error.response.data.error}`);
             console.log(error.response.data);
           });
