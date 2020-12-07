@@ -25,12 +25,7 @@ morgan.token('data', function getId (req) {
     Person.find({}).then(persons => {
       response.json(persons.map(person => person.toJSON()));
     });
-    // const generateId = () => {
-    //   const maxId = persons.length > 0
-    //     ? Math.max(...persons.map(n => n.id))
-    //     : 0
-    //   return maxId + 1
-    // }
+
   });
   app.get('/api/info',(request,response) => {
     var dateObject=new Date()
@@ -61,7 +56,7 @@ Person.findByIdAndUpdate(request.params.id,p, { new: true }).then(updatedPerson 
   response.json(updatedPerson.toJSON())
 })
 .catch(error => next(error))
-})
+});
    
     app.post("/api/persons", (request, response, next) => {
       const body = request.body;
