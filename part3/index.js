@@ -25,12 +25,7 @@ morgan.token('data', function getId (req) {
     Person.find({}).then(persons => {
       response.json(persons.map(person => person.toJSON()));
     });
-    // const generateId = () => {
-    //   const maxId = persons.length > 0
-    //     ? Math.max(...persons.map(n => n.id))
-    //     : 0
-    //   return maxId + 1
-    // }
+
   });
   app.get('/api/info',(request,response) => {
     var dateObject=new Date()
@@ -51,6 +46,18 @@ morgan.token('data', function getId (req) {
   app.get('/api/persons/:id',(req,res,next) => {
     Person.findById( req.params.id).then(person => {if(person){res.json(person.toJSON())} else res.status(404).end()}).catch(error => next(error))
     });
+  app.put('/api/persons/:id',(request,response,next) => {
+      const body=request.body;
+      const p={
+        name: body.name,
+        number: body.number
+      }
+Person.findByIdAndUpdate(request.params.id,p, { new: true }).then(updatedPerson => {
+  response.json(updatedPerson.toJSON())
+})
+.catch(error => next(error))
+});
+   
     app.post("/api/persons", (request, response, next) => {
       const body = request.body;
     if (body.name === undefined) {

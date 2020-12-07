@@ -10,7 +10,7 @@ const Notification = ({ message , status }) => {
       </div>
     )}
     return (
-        <div className="sucess">
+        <div className="success">
           {message}
         </div>
       )

@@ -52,6 +52,11 @@ const App = () => {
           }}}
   const addName = (event) => {
     event.preventDefault();
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: Math.floor(Math.random() * 101)
+    };
     if(persons.findIndex(checkNames)!==-1) 
     {if(persons.findIndex(checkNumbers) === persons.findIndex(checkNames))
       { setStatus(true)
@@ -79,34 +84,27 @@ const App = () => {
         })
       }
       }
-    else{
-      
-      const personObject ={
-        name:newName,
-        number:newNumber,
-      id: Math.floor(Math.random() * 101)
-      }
-      
-      personDB
-      .create(personObject)
-      .then(response => {
-        setStatus(true)
-        setErrorMessage(`Added ${personObject.name}`)
-        setPersons([...persons, personObject])
-      }).catch(error => {
-        setStatus(false)
-        setErrorMessage(         
-         error
-        )
+      else {
+        personDB
+          .create(personObject)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson));
+            setErrorMessage(`Added ${personObject.name}`);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(error => {
+            setStatus("true");
+            setErrorMessage(`${error.response.data.error}`);
+            console.log(error.response.data);
+          });
         setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
-      setNewName('');
-      setNewNumber('');}
-        
+          setErrorMessage(null);
+        }, 3000);
+      }
+    };
   
-  }
+   
 
  const handleSearchChange = (event)  =>{
    setNewSearch(event.target.value);
