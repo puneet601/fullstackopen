@@ -1,4 +1,6 @@
-const dummy=(blogs) =>{
+const _ = require('lodash');
+
+const dummy = (blogs) => {
     if(blogs)
     return 1
 }
@@ -28,5 +30,58 @@ let x=blogs.map(b => checklikes(b))
     
 return obj
 }
+const mostBlogs = (blogs) => {
+    let authorArray = _.map(blogs, 'author');
+    authorArray = authorArray.sort();
+    
+    let i = 0; let maxAuthor = authorArray[0]; let curr = 1; let max = 1;
+    for (i = 0; i < authorArray.length; i++) {
+        if (authorArray[i] === authorArray[i + 1])
+            curr++;
+        else {
+            if (curr > max) {
+                console.log(max,authorArray[i])
+                max = curr;
+                maxAuthor = authorArray[i];
+            }
+            curr = 1;
+        }
+    }
+        if (max === curr)
+            maxAuthor = authorArray[authorArray.length - 1];
+           
+      
+    
+    const obj = {
+        author: maxAuthor,
+        blogs: max
+    }
+    
+    return obj
+}
+const mostLikes = (blogs) => {
+    let authorArray = _.map(blogs, 'author');
+    authorMap = new Map();
+    for (let i = 0; i < blogs.length; i++){
+        if (authorMap.get(blogs[i].author) === undefined) {
+            authorMap.set(blogs[i].author, blogs[i].likes);
+        }
+        else {
+            let newlikes = blogs[i].likes;
+            let oldlikes = authorMap.get(blogs[i].author);
+            authorMap.set(blogs[i].author, newlikes + oldlikes);
+        }
+    }
+    let maxlikes = Math.max(...authorMap.values());
+    let maxAuthor = [...authorMap.entries()]
+        .filter(({ 1: v }) => v === maxlikes).map(([k]) => k);
+    const obj = {
+     author: maxAuthor[0],
+     likes:maxlikes
 
-module.exports = {dummy,totalLikes,favouriteBlog}
+    }
+    console.log(obj);
+    return obj;
+    
+}
+module.exports = {dummy,totalLikes,favouriteBlog,mostBlogs,mostLikes}
