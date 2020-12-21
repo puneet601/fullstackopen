@@ -40,7 +40,7 @@ const mostBlogs = (blogs) => {
             curr++;
         else {
             if (curr > max) {
-                console.log(max,authorArray[i])
+               
                 max = curr;
                 maxAuthor = authorArray[i];
             }
@@ -60,7 +60,7 @@ const mostBlogs = (blogs) => {
     return obj
 }
 const mostLikes = (blogs) => {
-    let authorArray = _.map(blogs, 'author');
+   
     authorMap = new Map();
     for (let i = 0; i < blogs.length; i++){
         if (authorMap.get(blogs[i].author) === undefined) {
@@ -80,7 +80,7 @@ const mostLikes = (blogs) => {
      likes:maxlikes
 
     }
-    console.log(obj);
+    
     return obj;
     
 }
