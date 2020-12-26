@@ -40,11 +40,16 @@ test('post a blog', async () => {
 }
 await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
 const response = await api.get('/api/blogs')
-const contents = response.body.map(r => r.title)
+const titles = response.body.map(r => r.title)
 expect(response.body).toHaveLength(initialBlogs.length + 1)
-expect(contents).toContain(
+expect(titles).toContain(
     "Don't fakee it"
 )
+})
+test('check likes property in new created blogs', async () => {
+  const response = await api.get('/api/blogs')
+  let len = response.body.length;
+  expect(response.body[len-1].likes).toBeDefined()
 })
 afterAll(() => {
   mongoose.connection.close()
