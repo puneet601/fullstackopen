@@ -62,7 +62,7 @@ const mostBlogs = (blogs) => {
 const mostLikes = (blogs) => {
    
     authorMap = new Map();
-    for (let i = 0; i < blogs.length; i++){
+    for (let i = 0; i < blogs.length; i++) {
         if (authorMap.get(blogs[i].author) === undefined) {
             authorMap.set(blogs[i].author, blogs[i].likes);
         }
@@ -76,12 +76,10 @@ const mostLikes = (blogs) => {
     let maxAuthor = [...authorMap.entries()]
         .filter(({ 1: v }) => v === maxlikes).map(([k]) => k);
     const obj = {
-     author: maxAuthor[0],
-     likes:maxlikes
+        author: maxAuthor[0],
+        likes: maxlikes
 
     }
-    
     return obj;
-    
 }
 module.exports = {dummy,totalLikes,favouriteBlog,mostBlogs,mostLikes}

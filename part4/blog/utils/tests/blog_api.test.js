@@ -31,7 +31,21 @@ test('id is stored as id not _id', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body[0].id).toBeDefined()
 })
-
+test('post a blog', async () => {
+  const newBlog = {
+    "title": "Don't fakee it",
+    "author": "georgee cloony",
+    "url": "www.google.com",
+    "likes": 69
+}
+await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
+const response = await api.get('/api/blogs')
+const contents = response.body.map(r => r.title)
+expect(response.body).toHaveLength(initialBlogs.length + 1)
+expect(contents).toContain(
+    "Don't fakee it"
+)
+})
 afterAll(() => {
   mongoose.connection.close()
 })
