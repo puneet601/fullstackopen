@@ -1,19 +1,14 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../../app')
-
+const helper=require('./list_helper')
 const api = supertest(app)
 const Blog = require('../../models/blog');
-const initialBlogs = [
-  { title: "React patterns", author: "Michael Chan", url: "https://reactpatterns.com/", likes: 7, __v: 0 },
-{  title: "Go To Statement Considered Harmful", author: "Edsger W. Dijkstra",
-  url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html", likes: 5, __v: 0
-  }];
   beforeEach(async () => { 
     await Blog.deleteMany({})
-    let blogObject = new Blog(initialBlogs[0])
+    let blogObject = new Blog(helper.initialBlogs[0])
     await blogObject.save()
-    blogObject = new Blog(initialBlogs[1])
+    blogObject = new Blog(helper.initialBlogs[1])
     await blogObject.save()
   })
 test('blogs are returned as json', async () => {
@@ -24,7 +19,7 @@ test('blogs are returned as json', async () => {
 })
 test('correct amount of blogs are returned', async () => {
   const response = await api.get('/api/blogs')
-   expect(response.body).toHaveLength(initialBlogs.length)
+   expect(response.body).toHaveLength(helper.initialBlogs.length)
     
 })
 test('id is stored as id not _id', async () => {
@@ -35,21 +30,32 @@ test('post a blog', async () => {
   const newBlog = {
     "title": "Don't fakee it",
     "author": "georgee cloony",
-    "url": "www.google.com",
-    "likes": 69
-}
+    "url": "www.google.com"
+  }
 await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
-const response = await api.get('/api/blogs')
-const titles = response.body.map(r => r.title)
-expect(response.body).toHaveLength(initialBlogs.length + 1)
+const blogsAtEnd= await helper.blogsInDb()
+const titles = blogsAtEnd.map(r => r.title)
+expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 expect(titles).toContain(
     "Don't fakee it"
 )
 })
 test('check likes property in new created blogs', async () => {
-  const response = await api.get('/api/blogs')
-  let len = response.body.length;
-  expect(response.body[len-1].likes).toBeDefined()
+  const newBlog = {
+    "title": "Don't fakee it",
+    "author": "georgee cloony",
+    "url": "www.google.com"
+  }
+await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
+  const blogsAtEnd = await helper.blogsInDb()
+  let lastAddedBlog=blogsAtEnd[blogsAtEnd.length-1]
+   console.log(lastAddedBlog)
+  if (!lastAddedBlog.likes)
+  {
+    lastAddedBlog["likes"] = 0;
+   }
+
+  expect(lastAddedBlog.likes).toBeDefined()
 })
 afterAll(() => {
   mongoose.connection.close()
