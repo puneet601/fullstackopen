@@ -3,8 +3,10 @@ const FilterPerson = (props) => {
     
     return (
         <form>
-       show with
-        <input
+            Sort :
+             
+            <input
+                placeholder="Enter an alphabet"
             value={props.newSearch}
             onChange={props.handleSearchChange} />
             <br />
