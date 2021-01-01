@@ -57,6 +57,25 @@ await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /a
 
   expect(lastAddedBlog.likes).toBeDefined()
 })
+test('check title and url property of the blog', async () => {
+  const newBlog = {    
+    "author": "georgee cloony"   
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+  const blogAtEnd= await helper.blogsInDb()
+  expect(blogAtEnd).toHaveLength(helper.initialBlogs.length)
+  
+})
+test('deletes if id is valid and return 204', async () => {
+  let blogsAtStart = await helper.blogsInDb()
+  let blogToBeDeleted = blogsAtStart[0]
+  await api.delete(`/api/blogs/${blogToBeDeleted.id}`).expect(204)
+  const notesAtEnd = await helper.blogsInDb()
+  expect(blogAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+  const url = blogsAtStart.map(b => b.url);
+  expect(url).not.toContain(blogToBeDeleted.url)
+
+})
 afterAll(() => {
   mongoose.connection.close()
 })
