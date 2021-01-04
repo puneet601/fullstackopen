@@ -1,5 +1,6 @@
 const _ = require('lodash');
-const Blog=require('../../models/blog')
+const Blog = require('../../models/blog')
+const User = require('../../models/user')
 const initialBlogs = [
     { title: "React patterns", author: "Michael Chan", url: "https://reactpatterns.com/", likes: 7, __v: 0 },
     {
@@ -92,4 +93,8 @@ const mostLikes = (blogs) => {
     }
     return obj;
 }
-module.exports = {dummy,totalLikes,favouriteBlog,mostBlogs,mostLikes,initialBlogs,blogsInDb}
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(u => u.toJSON())
+} 
+module.exports = {dummy,totalLikes,favouriteBlog,mostBlogs,mostLikes,initialBlogs,blogsInDb,usersInDb}
