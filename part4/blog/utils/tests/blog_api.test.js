@@ -26,9 +26,7 @@ describe('when there is initially some blogs saved', () => {
       
   })
 })
-
-
-
+const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNvbWV0aGluIiwiaWQiOiI1ZmYyYzE3MGVjOTEyMDM0ZTg5N2Q5NTEiLCJpYXQiOjE2MDk3NDcxMDV9.w-KeEXs_Q3DABckNsx2aZsosTMucWfi-MaFNYQimdkw"
 describe('addition of a new blog', () => {
   test('succeeds with valid data', async () => {
     const newBlog = {
@@ -36,7 +34,7 @@ describe('addition of a new blog', () => {
       "author": "georgee cloony",
       "url": "www.google.com"
     }
-    await api.post('/api/blogs').send(newBlog).expect(200)
+    await api.post('/api/blogs').set({ "Authorization": `Bearer ${token}` }).send(newBlog).expect(200)
       .expect('Content-Type', /application\/json/)
     const blogsAtEnd = await helper.blogsInDb()
     const titles = blogsAtEnd.map(r => r.title)
@@ -99,9 +97,10 @@ describe('when there is initially one user in db', () => {
   
     test('creation succeeds with a fresh username', async () => {
       const usersAtStart = await helper.usersInDb()
-  
+     
+    
       const newUser = {
-        username: 'pk',
+        username: 'puneet',
         name: 'Puneet Jattana',
         password: 'BlackSwan'
       }
