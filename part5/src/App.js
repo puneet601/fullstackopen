@@ -3,15 +3,19 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login' 
 import Footer from './components/Footer'
+import './App.css';
 import Notification from './components/Notification'
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog,setNewBlog]=useState([])
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState('')
+   const [newTitle ,setNewTitle]=  useState('')
+  const [newUrl,setNewUrl] =  useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [status,setStatus]=useState(true)
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -68,22 +72,38 @@ const App = () => {
       }, 5000)
     }
   }
-//   const addBlog = () => {
+  const addBlog = async (event) => {
+    event.preventDefault();
+    try{ const newBlog = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      likes: 0,
+      id: Math.floor(Math.random() * 101)
+    }
+    const savedBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(savedBlog))
+      setStatus(true)
+    setErrorMessage(`A new Blog ${newTitle} by ${newAuthor} was added.`)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
 
-//   }
+    }
+    catch(exception){
+           setErrorMessage(`${exception}`);
+      console.log(exception);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+    } 
+  setNewAuthor('')
+  setNewTitle('')
+    setNewUrl('')
+  }
 //   const handleBlogChange = () => {
     
 //   }
-//   const blogForm = () => {
-//     <form onSubmit={addBlog}>
-//     <input
-//         value={newBlog}
-//       onChange={handleBlogChange}
-//     />
-//     <button type="submit">save</button>
-    
-//   </form>
-// }
   const handleLogOut = async (event) => {
     event.preventDefault()
     try {
@@ -91,6 +111,7 @@ const App = () => {
 setUser(null)
     }
     catch (exception) {
+      setStatus(false)
       setErrorMessage("User doesn't exist or has already logged out")
       setTimeout(() => {
         setErrorMessage(null)
@@ -128,12 +149,20 @@ setUser(null)
       else {
         return (
           <div>
+            <Notification message={errorMessage} status={status} />
             <h1>Blogs</h1>
             <p>{user.username} logged in</p>
           <button type="button" onClick={handleLogOut}>Logout</button>
+                       <h1>Create new Blog</h1>
+            <form>
+              title:<input type="text" value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
+              author:<input type="text" value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
+              url:<input type="text" value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
+              <button type="submit" onClick={addBlog}>Add</button>
+            </form>
             {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
-      )}
+            )}
           </div>
           
         )
