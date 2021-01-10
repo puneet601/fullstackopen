@@ -61,7 +61,7 @@ const App = () => {
 
     return (
       <div>
-        <Notification satus={status} message={errorMessage} />
+        <Notification status={status} message={errorMessage} />
         
         <h1>Blogs</h1>
         <p>{user.username} logged in</p>
@@ -75,7 +75,7 @@ const App = () => {
         </div>
         <button type="button" onClick={handleLogOut}>Logout</button>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} setUpdate={setUpdate} blogs={blogs} setBlogs={setBlogs} />
+          <Blog key={blog.id} blog={blog} user={user} setUpdate={setUpdate} blogs={blogs} setBlogs={setBlogs} setStatus={setStatus} setErrorMessage={setErrorMessage} />
         )}
       </div>
        
