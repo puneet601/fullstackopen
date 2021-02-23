@@ -4,22 +4,31 @@ import blogService from './services/blogs'
 import loginService from './services/login' 
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlog'
+import SigninForm from './components/SignUp'
+import Profile from './components/Profile'
+import userService from './services/users'
 import './App.css'
 import Notification from './components/Notification'
 const App = () => {
+
+  const padding = {
+    padding: 5
+  }
   const [loginVisible, setLoginVisible] = useState(false)
-  const [newBlogVisible, setNewBlogVisible] = useState(false)
+  const [signinVisible,setSigninVisible]=useState(false)
+   const [newBlogVisible, setNewBlogVisible] = useState(false)
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState(null)
   const [newTitle, setNewTitle] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [status, setStatus] = useState(true)
   const [update,setUpdate]=useState(null)
-  
+  const [showUserProfile, setShowUserProfile] = useState('')
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
      setBlogs(blogs)
@@ -33,15 +42,27 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [update])
+  
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
+    const hideSignIn = { display: signinVisible ? 'none' : '' }
+    const showSignIn = { display: signinVisible ? '' : 'none' }
     return (
-      <div> <Notification status={status} message={errorMessage} />
-             <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
+      <div className="container">    
+                 <div style={hideWhenVisible}>
+          <button onClick={() => {
+            setLoginVisible(true)
+          setSigninVisible(false)}}>log in</button></div><div style={hideSignIn}>
+          <button onClick={() => {
+            setSigninVisible(true)
+          setLoginVisible(false)}}>Sign in</button>
         </div>
+        <div style={showSignIn}>
+          <SigninForm
+            setStatus={setStatus}
+            setErrorMessage={setErrorMessage}
+           /></div>
         <div style={showWhenVisible}>
           <LoginForm
             username={username}
@@ -51,16 +72,23 @@ const App = () => {
             handleSubmit={handleLogin}
           />
           <button onClick={() => setLoginVisible(false)}>cancel</button>
+          <Notification status={status} message={errorMessage} />
         </div>
       </div>
     )
+  }
+  const showProfile = () => {   
+    return (<div class="container">
+      <Profile showUserProfile={showUserProfile} getUserBlogs={getUsersBlogs} setShowUserProfile={setShowUserProfile} />
+    </div>)
   }
   const blogForm = () => {
     const hideWhenVisible = { display: newBlogVisible ? 'none' : '' }
     const showWhenVisible = { display: newBlogVisible ? '' : 'none' }
 
     return (
-      <div>
+      <div className="container">
+      
         <Notification status={status} message={errorMessage} />
         
         <h1>Blogs</h1>
@@ -71,15 +99,22 @@ const App = () => {
         <div style={showWhenVisible}>
           <NewBlogForm showWhenVisible={showWhenVisible} setNewBlogVisible={setNewBlogVisible}
             newTitle={newTitle} setNewTitle={setNewTitle}
-            newAuthor={newAuthor} setNewAuthor={setNewAuthor} newUrl={newUrl} setNewUrl={setNewUrl} addBlog={addBlog} />
+            newAuthor={newAuthor} setNewAuthor={setNewAuthor}
+            newUrl={newUrl} setNewUrl={setNewUrl} addBlog={addBlog} />
         </div>
         <button type="button" onClick={handleLogOut}>Logout</button>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} setUpdate={setUpdate} blogs={blogs} setBlogs={setBlogs} setStatus={setStatus} setErrorMessage={setErrorMessage} />
+          <Blog key={blog.id} blog={blog} user={user} setShowUserProfile={setShowUserProfile} setUpdate={setUpdate} blogs={blogs} setBlogs={setBlogs} setStatus={setStatus} setErrorMessage={setErrorMessage} />
         )}
       </div>
        
     )
+  }
+  const getUsersBlogs = async (showUserProfile) => {
+    // event.preventDefault()
+    const userData = await userService.getBlogs(showUserProfile.id)
+    console.log(userData)
+    return userData
   }
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -138,9 +173,12 @@ const App = () => {
  
   const handleLogOut = async (event) => {
     event.preventDefault()
-    try {
+    try { 
       window.localStorage.removeItem(user)
-setUser(null)
+      setUser(null)
+      
+      window.localStorage.clear()
+
     }
     catch (exception) {
       setStatus(false)
@@ -149,16 +187,18 @@ setUser(null)
         setErrorMessage(null)
       }, 5000)
     }
-  }
-      
+  } 
+  if (showUserProfile !== '') {
+    return (<div>
+     <div>{showProfile()}</div>
+   </div>)   
+}
+      else
     return (
       <div>
-        {user === null ?
-        loginForm() :
-        blogForm()
-      }
-     </div> 
-        )
+        {user === null ? loginForm() : blogForm() }
+        </div>
+)
 }
 
 export default App

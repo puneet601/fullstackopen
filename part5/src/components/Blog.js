@@ -1,13 +1,14 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Togglable from './Toggleable'
 import blogService from '../services/blogs'
-const Blog = ({ blog, setUpdate,user, blogs, setBlogs,setErrorMessage,setStatus }) => {
+import '../App.css'
+const Blog = ({ blog, setUpdate, blogs, setBlogs,setShowUserProfile }) => {
    const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    //  border: 'solid 1px black',
     borderWidth: 1,
-    marginBottom: 5
+     marginBottom: 5
   }
   const like = async (event) => {
     let id=blog.id
@@ -21,22 +22,27 @@ const Blog = ({ blog, setUpdate,user, blogs, setBlogs,setErrorMessage,setStatus 
   const remove = async (event) => {
     event.preventDefault()
     if (window.confirm(`Do you wante to Delete ${blog.title} ?`)) 
-      await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !==blog.id))
-     }
-    return(
-      <div style={blogStyle}>
-         {blog.title} {blog.author}
+      {await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !==blog.id))}
+  }
+ 
+  let blogUser=blog.user
+   return( 
+      <div style={blogStyle} className="blog" > 
+       <h2>{blog.title}</h2>
+       <span onClick={() => setShowUserProfile(blogUser)}>{blog.author}</span>
         <Togglable buttonLabel='view'>
          <div>
             {blog.title} <br /> {blog.url} <br /> {blog.author} <br /> likes: {blog.likes} <br /> 
-           { console.log(blog.user)}
+           
             <button type="submit" onClick={like}>Like</button>
             <button type="submit" onClick={remove} >Remove</button>
         </div>
 </Togglable>
    
   </div>
-)}
+    )
+  
+}
 
 export default Blog
