@@ -2,10 +2,8 @@ import React from 'react'
 const FilterPerson = (props) => {
     
     return (
-        <form>
-            Sort :
-             
-            <input
+        <form >
+            <h2>Sort :</h2> <input
                 placeholder="Enter an alphabet"
             value={props.newSearch}
             onChange={props.handleSearchChange} />

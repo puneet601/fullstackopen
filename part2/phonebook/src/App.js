@@ -5,6 +5,10 @@ import './index.css';
 import Persons from "./components/Persons";
 import personDB from "./services/personDB";
 import Notification from "./components/Notification";
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link,useParams,useRouteMatch
+} from "react-router-dom"
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -114,20 +118,29 @@ const App = () => {
   
 
   return (
-    <div>
+    <div className="container"><form>
       <Notification message={errorMessage} status={status} />
       <h2>Phonebook</h2>   
      <FilterPerson newSearch={newSearch} handleSearchChange={handleSearchChange} />
         <NewPerson newName={newName} setName={setName} number={newNumber} setNumber={setNumber} addName={addName}  handleDeletePerson={handleDeletePerson} />
-        <h2>Numbers</h2>
-
+    </form>  
+        <Router>
+          <Link to="/contacts"><h2>Numbers</h2></Link>
+            <Switch>
+              <Route path="/contacts">
               <Persons
         persons={persons}
         newSearch={newSearch}
         handleDeletePerson={handleDeletePerson}
       />
+              </Route>
+            </Switch>
+          
+        </Router>  
+        
+    
     </div>
-  )
+     )
 }
 
 export default App

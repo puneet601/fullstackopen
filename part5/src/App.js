@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link
+} from "react-router-dom"
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login' 
@@ -7,13 +11,10 @@ import NewBlogForm from './components/NewBlog'
 import SigninForm from './components/SignUp'
 import Profile from './components/Profile'
 import userService from './services/users'
-import './App.css'
 import Notification from './components/Notification'
+import { Container } from '@material-ui/core'
+import ClearIcon from '@material-ui/icons/Clear';
 const App = () => {
-
-  const padding = {
-    padding: 5
-  }
   const [loginVisible, setLoginVisible] = useState(false)
   const [signinVisible,setSigninVisible]=useState(false)
    const [newBlogVisible, setNewBlogVisible] = useState(false)
@@ -28,7 +29,10 @@ const App = () => {
   const [status, setStatus] = useState(true)
   const [update,setUpdate]=useState(null)
   const [showUserProfile, setShowUserProfile] = useState('')
-
+  const padding = {
+    padding: 5
+  
+}
   useEffect(() => {
     blogService.getAll().then(blogs =>
      setBlogs(blogs)
@@ -44,42 +48,46 @@ const App = () => {
   }, [update])
   
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-    const hideSignIn = { display: signinVisible ? 'none' : '' }
-    const showSignIn = { display: signinVisible ? '' : 'none' }
+    // const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    // const showWhenVisible = { display: loginVisible ? '' : 'none' }
+    // const hideSignIn = { display: signinVisible ? 'none' : '' }
+    // const showSignIn = { display: signinVisible ? '' : 'none' }
     return (
-      <div className="container">    
-                 <div style={hideWhenVisible}>
-          <button onClick={() => {
-            setLoginVisible(true)
-          setSigninVisible(false)}}>log in</button></div><div style={hideSignIn}>
-          <button onClick={() => {
-            setSigninVisible(true)
-          setLoginVisible(false)}}>Sign in</button>
-        </div>
-        <div style={showSignIn}>
-          <SigninForm
+      <div>
+        <Router>
+          <div>
+          <Link style={padding} to="/login">Log In!</Link>
+        <Link style={padding} to="/signup">Sign Up!</Link>
+      </div>
+      <Switch>
+       <Route path="/signup">
+       <SigninForm
             setStatus={setStatus}
             setErrorMessage={setErrorMessage}
-           /></div>
-        <div style={showWhenVisible}>
-          <LoginForm
+          />
+            </Route>
+            <Route path="/login">
+            <LoginForm
             username={username}
             password={password}
             handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
+              />
+              </Route>
+      </Switch>
+    </Router>   
           <Notification status={status} message={errorMessage} />
         </div>
-      </div>
     )
   }
   const showProfile = () => {   
     return (<div class="container">
-      <Profile showUserProfile={showUserProfile} getUserBlogs={getUsersBlogs} setShowUserProfile={setShowUserProfile} />
+      <Profile
+        showUserProfile={showUserProfile}
+        getUserBlogs={getUsersBlogs}
+        setShowUserProfile={setShowUserProfile}
+      />
     </div>)
   }
   const blogForm = () => {
@@ -87,31 +95,44 @@ const App = () => {
     const showWhenVisible = { display: newBlogVisible ? '' : 'none' }
 
     return (
-      <div className="container">
-      
-        <Notification status={status} message={errorMessage} />
-        
+      <div><Notification status={status} message={errorMessage} />
         <h1>Blogs</h1>
         <p>{user.username} logged in</p>
         <div style={hideWhenVisible}>
-          <button onClick={() => setNewBlogVisible(true)}>New Blog</button>
+          <button className="button" onClick={() => setNewBlogVisible(true)}>New Blog</button>
         </div>
         <div style={showWhenVisible}>
-          <NewBlogForm showWhenVisible={showWhenVisible} setNewBlogVisible={setNewBlogVisible}
-            newTitle={newTitle} setNewTitle={setNewTitle}
-            newAuthor={newAuthor} setNewAuthor={setNewAuthor}
-            newUrl={newUrl} setNewUrl={setNewUrl} addBlog={addBlog} />
+          <NewBlogForm
+            showWhenVisible={showWhenVisible}
+            setNewBlogVisible={setNewBlogVisible}
+            newTitle={newTitle}
+            setNewTitle={setNewTitle}
+            newAuthor={newAuthor}
+            setNewAuthor={setNewAuthor}
+            newUrl={newUrl}
+            setNewUrl={setNewUrl}
+            addBlog={addBlog}
+          />
         </div>
-        <button type="button" onClick={handleLogOut}>Logout</button>
+        <button className="button" type="button" onClick={handleLogOut}>Logout</button>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} setShowUserProfile={setShowUserProfile} setUpdate={setUpdate} blogs={blogs} setBlogs={setBlogs} setStatus={setStatus} setErrorMessage={setErrorMessage} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            setShowUserProfile={setShowUserProfile}
+            setUpdate={setUpdate}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            setStatus={setStatus}
+            setErrorMessage={setErrorMessage}
+          />
         )}
       </div>
        
     )
   }
   const getUsersBlogs = async (showUserProfile) => {
-    // event.preventDefault()
     const userData = await userService.getBlogs(showUserProfile.id)
     console.log(userData)
     return userData
@@ -188,15 +209,23 @@ const App = () => {
       }, 5000)
     }
   } 
+  
   if (showUserProfile !== '') {
-    return (<div>
-     <div>{showProfile()}</div>
-   </div>)   
+    return (<Router>
+      <div>
+        <Link style={padding} to="/">Home</Link>
+      </div>
+      <Switch>
+       <Route path="/">
+          {showProfile()}
+        </Route>
+      </Switch>
+    </Router>)   
 }
       else
     return (
       <div>
-        {user === null ? loginForm() : blogForm() }
+        {user === null ? loginForm() : blogForm()}
         </div>
 )
 }

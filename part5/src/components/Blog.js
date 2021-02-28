@@ -1,14 +1,15 @@
 import React,{useState} from 'react'
 import Togglable from './Toggleable'
 import blogService from '../services/blogs'
-import '../App.css'
+import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
+import DeleteOutlineTwoToneIcon from '@material-ui/icons/DeleteOutlineTwoTone';
+
 const Blog = ({ blog, setUpdate, blogs, setBlogs,setShowUserProfile }) => {
    const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    //  border: 'solid 1px black',
-    borderWidth: 1,
-     marginBottom: 5
+    // paddingTop: 10,
+    // paddingLeft: 2,
+    // borderWidth: 1,
+    //  marginBottom: 5
   }
   const like = async (event) => {
     let id=blog.id
@@ -35,8 +36,8 @@ const Blog = ({ blog, setUpdate, blogs, setBlogs,setShowUserProfile }) => {
          <div>
             {blog.title} <br /> {blog.url} <br /> {blog.author} <br /> likes: {blog.likes} <br /> 
            
-            <button type="submit" onClick={like}>Like</button>
-            <button type="submit" onClick={remove} >Remove</button>
+            <button type="submit" onClick={like}><FavoriteTwoToneIcon /></button>
+            <button type="submit" onClick={remove} ><DeleteOutlineTwoToneIcon /></button>
         </div>
 </Togglable>
    

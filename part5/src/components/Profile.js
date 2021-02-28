@@ -4,7 +4,7 @@ const Profile = ({ showUserProfile, getUsersBlogs ,setShowUserProfile }) => {
     <div className="container">
         <h1>{showUserProfile.username}</h1><br />
         {console.log(getUsersBlogs)}
-      <button onClick={() => setShowUserProfile('')}>Back</button>
+      <button className="button" onClick={() => setShowUserProfile('')}>Back</button>
     </div>
   )
 }
