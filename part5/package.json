@@ -1,7 +1,7 @@
 {
   "name": "bloglist-frontend",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000/",
+  "homepage": "https://dry-garden-03309.herokuapp.com/",
   "main": "index.js",
   "private": true,
   "dependencies": {
